@@ -5,6 +5,8 @@ import re
 
 import sys
 
+import send2trash
+
 # 检查是否至少有一个命令行参数
 print("请输入目标JSON文件名，或选中目标文件按下ctrl+shift+c快捷键快速复制文件路径，黏贴到此处：")
 while True:
@@ -70,6 +72,7 @@ def inject():
     with open(file_path, 'w', encoding='utf-8') as file:
         json.dump(new_content, file, ensure_ascii=False, indent=4)
         print("\n完成翻译，可以用SExtract注入了\n\n文件已保存至",file_path)
+        send2trash.send2trash(new_dirname)
 
 if __name__ == '__main__':
     extract_wait_trans()
