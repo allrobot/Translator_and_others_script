@@ -36,6 +36,10 @@ def extract_wait_trans():
         # 原文和译文相同，大概率是原文
         if key == orign_content[key]:
             new_dict.update({key: ""})
+    if new_dict.__len__()==0:
+        print("\n没有相同key值，你可以直接用SExtract导入该json文件了\n")
+        send2trash.send2trash(new_dirname)
+        exit(0)
     with open(save_file_path, 'w', encoding='utf-8') as file:
         json.dump(new_dict, file, ensure_ascii=False, indent=4)
         print(f"\n待翻译.json有{new_dict.__len__()}行")
