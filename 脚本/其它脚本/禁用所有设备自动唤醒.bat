@@ -12,7 +12,7 @@ for /f "tokens=*" %%a in (tmptmptmp.txt) do (
   set "line=powercfg /devicedisablewake "!line!""
 
   REM 执行处理后的命令
-  echo !line!
+  !line!
 )
 
 REM 删除临时文件
