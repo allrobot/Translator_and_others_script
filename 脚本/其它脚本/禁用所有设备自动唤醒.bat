@@ -1,21 +1,21 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM 执行 powercfg 命令并将输出保存到临时文件
+REM ִ�� powercfg �����������浽��ʱ�ļ�
 powercfg /devicequery wake_programmable > tmptmptmp.txt
 
-REM 逐行读取临时文件的内容，并对每行进行处理
+REM ���ж�ȡ��ʱ�ļ������ݣ�����ÿ�н��д���
 for /f "tokens=*" %%a in (tmptmptmp.txt) do (
   set "line=%%a"
 
-  REM 在每行前面添加命令前缀和后缀
+  REM ��ÿ��ǰ����������ǰ׺�ͺ�׺
   set "line=powercfg /devicedisablewake "!line!""
 
-  REM 执行处理后的命令
+  REM ִ�д����������
   !line!
 )
 
-REM 删除临时文件
+REM ɾ����ʱ�ļ�
 del tmptmptmp.txt
 
 endlocal
