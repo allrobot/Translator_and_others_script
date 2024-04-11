@@ -5,7 +5,7 @@ import json
 import re
 
 # 用于匹配无法在译文中工作的变量或其它代码
-separator_regex='\\\\[a-zA-Z]+\[([^\]]*)\]|\\\\\{|\\\\\||if\([^\)]*\)|\n'
+separator_regex='\\\\[a-zA-Z]+\[([^\]]*)\]|\\\\\{|\\\\\||if\([^\)]*\)|\n|\{\{'
 
 """
 提取译文到字典，返回{原文1:译文1,原文2:译文2...}字典
@@ -68,7 +68,7 @@ def save_dict_as_json(data_dict, output_file):
         json.dump(data_dict, file,indent=4,ensure_ascii=False)
 
 """
-添加{}保存成CSV文件
+保存成T++导入用的CSV文件
 """
 def save_dict_as_csv(data_dict, output_file):
     fieldnames = ['Original Text', 'Initial']
@@ -80,6 +80,17 @@ def save_dict_as_csv(data_dict, output_file):
         for key, value in data_dict.items():
             writer.writerow({'Original Text': key, 'Initial': value})
 
+"""
+保存成插件导入用的CSV文件
+"""
+def plugin_save_dict_as_csv(data_dict, output_file):
+
+    with open(output_file, 'w', newline='',encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(['ja','zh'])
+        writer.writerow(['interface_language','Language'])
+        for key, value in data_dict.items():
+            writer.writerow([key, value])
 
 # 指定目录路径
 while True:
@@ -123,14 +134,17 @@ if not os.path.exists(new_dir):
     os.mkdir(new_dir)
 output_file_path = os.path.join(new_dir,"main.json")
 save_dict_as_json(json_dict, output_file_path) # 将字典保存为JSON文件
-print(f"\n已保存至\n{output_file_path}\n\n可以移动locales文件夹放至www目录，然后配置多语言翻译插件\n注：DKTools_Localization.js插件")
+print(f"\n插件导入用JSON译文文件已保存至 {output_file_path}")
+output_file_path = os.path.join(new_dir,"插件专用译文CSV.csv")
+plugin_save_dict_as_csv(json_dict,output_file_path)
+print(f"插件导入用CSV译文文件已保存至 {output_file_path}")
 
 
-# 保存T++导入格式CSV
+# 保存T++导入格式CSV以及其它
 new_dir1=os.path.join(directory_path,"原文添加双{}")
 if not os.path.exists(new_dir1):
     os.makedirs(new_dir1)
 output_file_path = os.path.join(new_dir1,"T++导入该文件然后覆盖data.csv")
 save_dict_as_csv(trans_dict, output_file_path)
-print(f"\nT++导入\n{output_file_path}\n然后导出到data覆盖，用于多语言插件要求原文格式，否则插件无法加载原文并且翻译")
+print(f"\n插件导入所需原文CSV已生成 {output_file_path}\n需要翻译的原文已添加大括号，需T++导入覆盖，用于多语言插件要求原文格式，否则插件无法加载原文并且翻译")
 
