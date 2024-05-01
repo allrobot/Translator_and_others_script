@@ -1,0 +1,113 @@
+matches:
+
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y:%m:%d"
+  
+  - trigger: ":conda"
+    replace: "conda activate "
+
+  - trigger: clog
+    replace: "console.log("
+  - trigger: ipflush
+    replace: "ipconfig/flushdns"
+
+  # 贪婪表达式，匹配全部字符
+  - trigger: "***"
+    replace: "(.*?)"
+
+  # 匹配到"之前的全部字符
+  - trigger: "^^"
+    replace: "([^\\r]*)"
+
+  # 
+  - trigger: "oumei."
+    replace: "/欧美.*"
+
+  # 
+  - trigger: "yazhoufeng."
+    replace: "/亚洲风.*"
+
+  # 
+  - trigger: "guo."
+    replace: "/国.*"
+
+  # 
+  - trigger: "shahe."
+    replace: "/沙盒.*"
+
+  # 
+  - regex: (?i)qqq
+    replace: "&pwd="
+
+  # Print the output of a shell command
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo 'Hello from your shell'"
+
+  
+  # 把一串英文句子替换容易匹配的句子，编写uBock origin用的            
+  - trigger: :st
+    replace: "{{output}}"
+    vars:
+      - name: string
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - -c
+            - |
+              import re
+              # 获取剪切板文本内容
+              clipboard_string="{{string}}"
+              # 删掉一串英文的首个英文，转换.+
+              clipboard_string=re.sub('(\s+|)(?:[^a-zA-Z/\r\n]|^)(\s+|)[a-zA-Z]|(?<=^/)[A-Za-z]','.+',clipboard_string)
+              clipboard_string=re.sub(r'([\s\S]+)',r'/\1/',clipboard_string)
+              # output
+              print(clipboard_string)
+
+  # 图片链接替换为[img]xxx.png[/img]格式          
+  - trigger: :[img
+    replace: "{{output}}"
+    vars:
+      - name: string
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - -c
+            - |
+              print("[img]"+"{{string}}"+"[/img]")
+              
+              
+  # imgur上传图片获取的图片链接，替换为[img]xxx.png[/img]格式          
+  - trigger: :imgur
+    replace: "{{output}}"
+    vars:
+      - name: string
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - -c
+            - |
+              get_string="{{string}}"
+              if "https://imgur.com/" in get_string:
+                  new_string=get_string.replace("https://imgur.com/","")
+                  print("[img]https://i.imgur.com/"+new_string+"[/img]")
+
+  # And much more! For more information, visit the docs: https://espanso.org/docs/
