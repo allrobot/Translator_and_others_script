@@ -60,7 +60,7 @@ def disguise_file(src_file: str, video_file: str, out_file: str = None):
         f_out.write(struct.pack("<Q", meta_len))
 
     send2trash(src_file)
-    print(f"✅ 伪装完成: {out_file}  (原文件 {src_file} 大小: {src_size / 1024 / 1024:.2f} MB)")
+    print(f"✅ 伪装完成: {out_file}  (原文件 {src_file} 大小: {src_size / 1024 / 1024:.2f} MB -> {os.path.getsize(out_file)/1024/1024:.2f} MB)")
 
 
 def extract_file(fake_video: str, out_dir: str = None):
@@ -212,7 +212,9 @@ def main_menu():
                     print(f"错误：目录 '{new_dir}' 不存在")
             elif choice == "3":
                 if conti_ == '':
-                    video_list = sorted(os.listdir(video_folder))
+                    video_list = sorted(os.listdir(video_folder),
+                                        key=lambda x: [int(text) if text.isdigit() else text.lower()
+                                                       for text in re.split(r'(\d+)', x)])
                     index = 0
                     for file in os.listdir(target_dir):
                         index += 1
