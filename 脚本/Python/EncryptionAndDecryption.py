@@ -10,7 +10,6 @@ MAGIC = b'FAKEVID1'
 LEN_SIZE = 8
 XOR_KEY = 0xA7  # 混淆用的密钥，随便改
 
-
 def disguise_file(src_file: str, video_file: str, out_file: str = None):
     """
     把 src_file 伪装到 video_file 中，生成新的伪装视频
@@ -192,7 +191,7 @@ def main_menu():
                 pass
             elif conti_ == '':
                 print("3. 将目标文件夹内的所有文件加密并伪装为视频")
-                if os.listdir(video_folder) < os.listdir(target_dir):
+                if os.listdir(video_folder).__len__() < os.listdir(target_dir).__len__():
                     print(
                         f"\n# 提示：cover_video 文件夹中的视频数量少于目标文件夹中的文件数量。\n# 请补充视频文件，建议与需要加密的文件数量保持一致，或放更多的 mp4 视频。")
                     print(f"# cover_video文件夹路径为 {os.getcwd()}\\{video_folder}\n")
